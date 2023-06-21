@@ -1,0 +1,65 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id              Int            @id @default(autoincrement())
+    email           String         @unique
+    name            String?
+    password        String
+    role            Role           @default(USER)
+    isEmailVerified Boolean        @default(false)
+    createdAt       DateTime       @default(now())
+    updatedAt       DateTime       @updatedAt
+    Token           Token[]
+    Notification    Notification[]
+    Message         Message[]
+}
+
+model Token {
+    id          Int       @id @default(autoincrement())
+    token       String
+    type        TokenType
+    expires     DateTime
+    blacklisted Boolean
+    createdAt   DateTime  @default(now())
+    user        User      @relation(fields: [userId], references: [id])
+    userId      Int
+}
+
+model Notification {
+    id        Int      @id @default(autoincrement())
+    message   String
+    read      Boolean  @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    user      User     @relation(fields: [userId], references: [id])
+    userId    Int
+}
+
+model Message {
+    id         Int      @id @default(autoincrement())
+    receiverId Int
+    content    String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    user       User     @relation(fields: [userId], references: [id])
+    userId     Int
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+enum TokenType {
+    ACCESS
+    REFRESH
+    RESET_PASSWORD
+    VERIFY_EMAIL
+}
