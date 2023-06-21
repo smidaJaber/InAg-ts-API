@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_ENV=development nodemon api/index.ts",
 	  "db:push": "prisma db push",
     "db:studio": "prisma studio",
- 	  "build": "rimraf dist && npx tsc -p tsconfig.json",
+ 	  "build": "rimraf dist && npx tsc  ",
 	  "test": "echo \"Error: no test specified for now\" && exit 1"
 	},
 	"keywords": [],
